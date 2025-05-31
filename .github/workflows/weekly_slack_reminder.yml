@@ -1,0 +1,30 @@
+name: Weekly Slack Reminder
+
+on:
+  schedule:
+    - cron: "0 21 * * 6" # 毎週土曜 6:00 JST）
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Slack reminder script
+        env:
+          PERSONAL_GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          REPO: ${{ secrets.REPO }}
+        run: python slack_reminder.py
