@@ -9,6 +9,36 @@ GitHub の「未執筆」ラベルが付いた Issue を毎週 Slack に通知�
 - Issue がなければ「未執筆なし」と通知
 - GitHub Actions で指定した時間に Slack へ通知されます
 
+## Slack App設定方法
+
+このBotを使うには、Slack Appを作成し適切な権限を設定する必要があります。
+
+1. [Slack API](https://api.slack.com/apps) にアクセスし、「Create New App」をクリック
+   - 「From scratch」を選択
+   - App名を入力（例: 「Blog Reminder Bot」）
+   - 使用するワークスペースを選択
+
+2. 作成したアプリの「OAuth & Permissions」セクションへ移動
+
+3. 「Scopes」セクションで以下のBot Token Scopesを追加:
+   - `chat:write` (メッセージ送信用)
+
+4. ページ上部の「Install to Workspace」ボタンをクリックしてアプリをインストール
+
+5. インストール後に表示される「Bot User OAuth Token」をコピーし、環境変数 `SLACK_BOT_TOKEN` に設定
+
+6. アプリを投稿先チャンネルに招待:
+   ```
+   /invite @あなたのアプリ名
+   ```
+
+7. チャンネルIDの取得:
+   - Slackでチャンネルを開き、URLの最後の部分がチャンネルID
+   - または API Testing で `conversations.list` を呼び出して確認
+   - 取得したIDを環境変数 `SLACK_CHANNEL_ID` に設定
+
+これでSlack Appの設定は完了です。GitHub Actionsから通知を送れるようになります。
+
 ## 必要な環境変数
 
 ローカルで確かめる場合は`.env`で必要な環境変数を設定してください
