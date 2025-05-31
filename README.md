@@ -37,8 +37,6 @@ GitHub の「未執筆」ラベルが付いた Issue を毎週 Slack に通知�
    - または API Testing で `conversations.list` を呼び出して確認
    - 取得したIDを環境変数 `SLACK_CHANNEL_ID` に設定
 
-これでSlack Appの設定は完了です。GitHub Actionsから通知を送れるようになります。
-
 ## 必要な環境変数
 
 ローカルで確かめる場合は`.env`で必要な環境変数を設定してください
