@@ -15,7 +15,7 @@ if os.getenv("ENV", "local") == "local":
 GITHUB_TOKEN = os.getenv("PERSONAL_GITHUB_TOKEN")
 SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL_ID")
-REPO = os.getenv("REPO", "tomitahisaki/blog_slack_reminder")
+REPO = os.getenv("REPO")
 
 def fetch_issues():
   url = f"https://api.github.com/repos/{REPO}/issues"
