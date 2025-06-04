@@ -42,9 +42,7 @@ Githubと連携するために、AccessTokenを設定する必要があります
 
 1. トークン作成ページにアクセス([GitHub Setting](https://github.com/settings/tokens))
 
-  - Fine-grained tokens」または「Personal access tokens (classic)」のどちらかを選択できます。
-
-    一般的には classic で問題ありません（必要なスコープに応じて選択してください）
+  - 「Personal access tokens (classic)」を選択してください
 
 2. トークンを作成
 
