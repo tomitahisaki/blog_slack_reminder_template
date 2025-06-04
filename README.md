@@ -34,8 +34,32 @@ GitHub の「未執筆」ラベルが付いた Issue を毎週 Slack に通知�
 
 7. チャンネルIDの取得:
    - Slackでチャンネルを開き、URLの最後の部分がチャンネルID
-   - または API Testing で `conversations.list` を呼び出して確認
    - 取得したIDを環境変数 `SLACK_CHANNEL_ID` に設定
+  
+## GitHubの設定
+
+Githubと連携するために、AccessTokenを設定する必要があります。
+
+1. トークン作成ページにアクセス([GitHub Setting](https://github.com/settings/tokens))
+
+  - Fine-grained tokens」または「Personal access tokens (classic)」のどちらかを選択できます。
+
+    一般的には classic で問題ありません（必要なスコープに応じて選択してください）
+
+2. トークンを作成
+
+    トークンの名前（例: blog_slack_reminder token）を設定します。
+
+    有効期限を設定（例: 30 days）。
+
+    必要なスコープを選択します：
+
+        ✅ repo（リポジトリの読み書き）
+
+     プライベートリポジトリを読み込む場合は repo スコープが必要です。
+
+3. Tokenの設定
+  - 取得したTokenを、`PERSONAL_GITHUB_TOKEN`に設定してください
 
 ## 必要な環境変数
 
