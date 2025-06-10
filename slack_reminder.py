@@ -3,9 +3,9 @@
 """
 import os
 import requests
-from slack_sdk import WebClient
 from github_client import GitHubIssueClient
 from issue_formatter import IssueFormatter
+from slack_notifier import SlackNotifier
 
 # ローカルでのテスト用に環境変数を設定
 if os.getenv("ENV", "local") == "local":
@@ -31,19 +31,16 @@ def format_issues(issue):
   formatter = IssueFormatter()
   return formatter.format_issue_summary(issue)
 
-def post_to_slack(message):
-  """Slackにメッセージを投稿する"""
-  client = WebClient(token=SLACK_TOKEN)
-  client.chat_postMessage(channel=SLACK_CHANNEL, text=message)
-
 def main():
   """メイン関数"""
   issues = fetch_issues()
+  notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
+  
   if not issues:
-    post_to_slack("✅️ 今週は未執筆のブログ記事がありません")
+    notifier.post_no_issues_message()
   else:
-    body = "📝 *今週のはてなブログ候補*\n\n" + "\n".join(format_issues(i) for i in issues)
-    post_to_slack(body)
+    formatted_issues = [format_issues(issue) for issue in issues]
+    notifier.post_issues_summary(formatted_issues)
 
 if __name__ == "__main__":
   main()
