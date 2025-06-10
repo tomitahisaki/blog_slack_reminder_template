@@ -42,13 +42,6 @@ def main():
   # GitHub Issuesを取得
   issues = fetch_issues()
   formatted_issues = [format_issues(issue) for issue in issues]
-  
-  # 執筆済み記事の件数を取得
-  blog_summary = ""
-  if BLOG_DOMAIN and BLOG_USERNAME and BLOG_API_KEY:
-    blog_notifier = BlogNotifier(BLOG_DOMAIN, BLOG_USERNAME, BLOG_API_KEY)
-    blog_summary = blog_notifier.get_posts_summary_message()
-  
   # Slackに通知
   notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
   
