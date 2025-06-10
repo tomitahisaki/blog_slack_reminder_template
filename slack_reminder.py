@@ -5,6 +5,7 @@ import os
 import requests
 from slack_sdk import WebClient
 from github_client import GitHubIssueClient
+from issue_formatter import IssueFormatter
 
 # ローカルでのテスト用に環境変数を設定
 if os.getenv("ENV", "local") == "local":
@@ -27,11 +28,8 @@ def fetch_issues():
 
 def format_issues(issue):
   """Issue情報をフォーマットする"""
-  title = issue["title"]
-  url = issue["html_url"]
-  body = issue.get("body", "").strip()
-  excerpt = "\n".join(body.splitlines()[:2]) if body else "No description provided"
-  return f"📌<{url}|{title}>\n{excerpt}"
+  formatter = IssueFormatter()
+  return formatter.format_issue_summary(issue)
 
 def post_to_slack(message):
   """Slackにメッセージを投稿する"""

@@ -33,7 +33,7 @@ class TestSlackReminder(unittest.TestCase):
         result = slack_reminder.format_issues(issue)
         
         # アサーション
-        expected = "📌<https://github.com/test/url|テスト記事>\nこれはテスト記事です\n2行目\n3行目"
+        expected = "📌<https://github.com/test/url|テスト記事>\nこれはテスト記事です\n2行目"
         self.assertEqual(result, expected)
     
     def test_format_issues_no_body(self):
