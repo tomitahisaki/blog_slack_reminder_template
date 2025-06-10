@@ -44,3 +44,28 @@ class SlackNotifier:
         """
         body = "📝 *今週のはてなブログ候補*\n\n" + "\n".join(formatted_issues)
         self.post_message(body)
+    
+    def post_blog_summary(self, blog_summary_message):
+        """
+        執筆済み記事のサマリーメッセージを投稿する
+        
+        Args:
+            blog_summary_message (str): 執筆済み記事のサマリーメッセージ
+        """
+        self.post_message(blog_summary_message)
+    
+    def post_weekly_summary(self, formatted_issues, blog_summary_message):
+        """
+        週次サマリー（未執筆記事 + 執筆済み記事）を投稿する
+        
+        Args:
+            formatted_issues (list): フォーマット済みのIssue情報のリスト
+            blog_summary_message (str): 執筆済み記事のサマリーメッセージ
+        """
+        if formatted_issues:
+            issues_section = "📝 *今週のはてなブログ候補*\n\n" + "\n".join(formatted_issues)
+        else:
+            issues_section = "✅️ 今週は未執筆のブログ記事がありません"
+        
+        combined_message = f"{issues_section}\n\n{blog_summary_message}"
+        self.post_message(combined_message)

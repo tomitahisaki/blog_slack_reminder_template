@@ -85,5 +85,35 @@ class TestSlackReminder(unittest.TestCase):
         mock_notifier.assert_called_once()
         mock_notifier_instance.post_no_issues_message.assert_called_once()
 
+    @patch('slack_reminder.BLOG_API_KEY', 'test-api-key')
+    @patch('slack_reminder.BLOG_USERNAME', 'testuser')
+    @patch('slack_reminder.BLOG_DOMAIN', 'test.hatenablog.com')
+    @patch('slack_reminder.BlogNotifier')
+    @patch('slack_reminder.SlackNotifier')
+    @patch('slack_reminder.fetch_issues')
+    def test_main_with_blog_integration(self, mock_fetch, mock_slack_notifier, mock_blog_notifier):
+        """ブログ統合機能を含むmain関数をテスト"""
+        # モックの設定
+        mock_fetch.return_value = [
+            {"title": "記事1", "html_url": "https://github.com/test/url1", "body": "本文1"}
+        ]
+        
+        mock_blog_instance = MagicMock()
+        mock_blog_notifier.return_value = mock_blog_instance
+        mock_blog_instance.get_posts_summary_message.return_value = "📝 *現在の執筆済み記事数*: 10件"
+        
+        mock_slack_instance = MagicMock()
+        mock_slack_notifier.return_value = mock_slack_instance
+        
+        # 関数の実行
+        slack_reminder.main()
+        
+        # アサーション
+        mock_fetch.assert_called_once()
+        mock_blog_notifier.assert_called_once_with('test.hatenablog.com', 'testuser', 'test-api-key')
+        mock_blog_instance.get_posts_summary_message.assert_called_once()
+        mock_slack_notifier.assert_called_once()
+        mock_slack_instance.post_weekly_summary.assert_called_once()
+
 if __name__ == '__main__':
     unittest.main()
