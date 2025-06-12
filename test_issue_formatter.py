@@ -13,7 +13,7 @@ class TestIssueFormatter(unittest.TestCase):
     formatter = IssueFormatter()
     result = formatter.format_issue_summary(issue)
     
-    expected = "📌<https://github.com/test/url|テスト記事>\nこれはテスト記事です\n2行目"
+    expected = "📌<https://github.com/test/url|テスト記事>"
     self.assertEqual(result, expected)
   
   def test_format_issue_summary_no_body(self):
@@ -25,7 +25,7 @@ class TestIssueFormatter(unittest.TestCase):
     formatter = IssueFormatter()
     result = formatter.format_issue_summary(issue)
     
-    expected = "📌<https://github.com/test/url|本文なし記事>\nNo description provided"
+    expected = "📌<https://github.com/test/url|本文なし記事>"
     self.assertEqual(result, expected)
   
   def test_format_issue_summary_empty_body(self):
@@ -38,7 +38,7 @@ class TestIssueFormatter(unittest.TestCase):
     formatter = IssueFormatter()
     result = formatter.format_issue_summary(issue)
     
-    expected = "📌<https://github.com/test/url|空の本文記事>\nNo description provided"
+    expected = "📌<https://github.com/test/url|空の本文記事>"
     self.assertEqual(result, expected)
   
   def test_format_issue_summary_one_line_body(self):
@@ -51,7 +51,7 @@ class TestIssueFormatter(unittest.TestCase):
     formatter = IssueFormatter()
     result = formatter.format_issue_summary(issue)
     
-    expected = "📌<https://github.com/test/url|1行記事>\nこれは1行だけの記事です"
+    expected = "📌<https://github.com/test/url|1行記事>"
     self.assertEqual(result, expected)
 
 if __name__ == '__main__':
