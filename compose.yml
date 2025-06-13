@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   slack_reminder:
     build: .
@@ -8,7 +6,7 @@ services:
 
   test:
     build: .
-    command: python -m unittest test_slack_reminder.py
+    command: python -m unittest -v
     environment:
       - ENV=test
       - PERSONAL_GITHUB_TOKEN=dummy_token
