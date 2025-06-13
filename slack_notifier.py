@@ -16,6 +16,8 @@ class SlackNotifier:
     self.post_message(message)
   
   def post_issues_summary(self, formatted_issues):
-    body = "📝 *今週のはてなブログ候補*\n\n" + "\n".join(formatted_issues)
-    self.post_message(body)
+    header = "📝 *今週のはてなブログ候補*\n\n"
+    issue_list = "\n".join(formatted_issues)
+    message = f"{header}{issue_list}"
+    self.post_message(message)
   

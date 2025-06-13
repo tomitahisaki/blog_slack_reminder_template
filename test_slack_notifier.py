@@ -54,13 +54,13 @@ class TestSlackNotifier(unittest.TestCase):
     notifier = SlackNotifier(self.slack_token, self.channel_id)
     
     formatted_issues = [
-      "📌<https://github.com/test/url1|記事1>\n内容1",
-      "📌<https://github.com/test/url2|記事2>\n内容2"
+      "📌<https://github.com/test/url1|記事1>\n",
+      "📌<https://github.com/test/url2|記事2>\n"
     ]
     
     notifier.post_issues_summary(formatted_issues)
     
-    expected_message = "📝 *今週のはてなブログ候補*\n\n📌<https://github.com/test/url1|記事1>\n内容1\n📌<https://github.com/test/url2|記事2>\n内容2"
+    expected_message = "📝 *今週のはてなブログ候補*\n\n📌<https://github.com/test/url1|記事1>\n\n📌<https://github.com/test/url2|記事2>\n"
     mock_client_instance.chat_postMessage.assert_called_once_with(
       channel=self.channel_id,
       text=expected_message
