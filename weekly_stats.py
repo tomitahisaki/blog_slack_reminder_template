@@ -18,38 +18,17 @@ REPO = os.getenv("REPO")
 
 def fetch_completed_issues():
   github_client = GitHubIssueClient(GITHUB_TOKEN, REPO)
-  
-  issues = github_client.fetch_issues(state="closed", labels="執筆済")
-  
-  # 1週間以内にクローズされたissueをフィルタリング
   one_week_ago = datetime.now() - timedelta(days=7)
-  
-  weekly_completed = []
-  for issue in issues:
-    if issue.get("closed_at"):
-      # ISO 8601形式の日時文字列をパース
-      closed_date = datetime.fromisoformat(issue["closed_at"].replace('Z', '+00:00'))
-      # タイムゾーンを無視して比較（簡易版）
-      closed_date_naive = closed_date.replace(tzinfo=None)
-      
-      if closed_date_naive >= one_week_ago:
-        weekly_completed.append(issue)
-  
-  return weekly_completed
+
+  return github_client.fetch_issues(state="closed", labels="執筆済", since=one_week_ago)
 
 def format_completed_issues(issues):
   formatter = IssueFormatter()
   return [formatter.format_issue_summary(issue) for issue in issues]
 
 def main():
-  print("Weekly stats script started")
-  
   completed_issues = fetch_completed_issues()
-  
-  formatted_issues = []
-  if completed_issues:
-    formatted_issues = format_completed_issues(completed_issues)
-    print("Formatted issues:", formatted_issues)
+  formatted_issues = format_completed_issues(completed_issues)
   
   notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
   notifier.post_completed_articles_summary(formatted_issues)
