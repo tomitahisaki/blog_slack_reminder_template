@@ -6,7 +6,7 @@ services:
 
   test:
     build: .
-    command: python -m unittest -v
+    command: python -m unittest discover -s . -p "test_*.py" -v
     environment:
       - ENV=test
       - PERSONAL_GITHUB_TOKEN=dummy_token
