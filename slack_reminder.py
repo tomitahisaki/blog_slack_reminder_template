@@ -1,51 +1,38 @@
 import os
-import requests
-from slack_sdk import WebClient
+from github_client import GitHubIssueClient
+from issue_formatter import IssueFormatter
+from slack_notifier import SlackNotifier
 
-# ローカルでのテスト用に環境変数を設定
 if os.getenv("ENV", "local") == "local":
   try:
     from dotenv import load_dotenv
     load_dotenv()
   except ImportError:
     print("please install python-dotenv to load environment variables from .env file")
-    
 
-# get environment variables from secrets
 GITHUB_TOKEN = os.getenv("PERSONAL_GITHUB_TOKEN")
 SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_CHANNEL = os.getenv("SLACK_CHANNEL_ID")
 REPO = os.getenv("REPO")
 
 def fetch_issues():
-  url = f"https://api.github.com/repos/{REPO}/issues"
-  headers = {
-    "Authorization": f"token {GITHUB_TOKEN}",
-    "Accept": "application/vnd.github+json"
-  }
-  params = { "state": "open", "labels": "未執筆"}
-  res = requests.get(url, headers=headers, params=params) 
-  res. raise_for_status()
-  return res.json()
+  github_client = GitHubIssueClient(GITHUB_TOKEN, REPO)
+  return github_client.fetch_issues(state="open", labels="未執筆")
 
 def format_issues(issue):
-  title = issue["title"]
-  url = issue["html_url"]
-  body = issue.get("body", "").strip()
-  excerpt = "\n".join(body.splitlines()[:2]) if body else "No description provided"
-  return f"📌<{url}|{title}>\n{excerpt}"
-
-def post_to_slack(message):
-  client = WebClient(token=SLACK_TOKEN)
-  client.chat_postMessage(channel=SLACK_CHANNEL, text=message)
+  formatter = IssueFormatter()
+  return formatter.format_issue_summary(issue)
 
 def main():
-  issues = fetch_issues()
-  if not issues:
-    post_to_slack("✅️ 今週は未執筆のブログ記事がありません")
-  else:
-    body = "📝 *今週のはてなブログ候補*\n\n" + "\n".join(format_issues(i) for i in issues)
-    post_to_slack(body)
+    issues = fetch_issues()
+    formatted_issues = [format_issues(issue) for issue in issues]
+
+    notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
+    
+    if not issues:
+        notifier.post_no_issues_message()
+    else:
+        notifier.post_issues_summary(formatted_issues)
 
 if __name__ == "__main__":
   main()

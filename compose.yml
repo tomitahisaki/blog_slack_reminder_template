@@ -1,17 +1,19 @@
-version: "3.8"
-
 services:
   slack_reminder:
     build: .
     env_file: .env
     command: python slack_reminder.py
 
+  weekly_stats:
+    build: .
+    env_file: .env
+    command: python weekly_stats.py
+
   test:
     build: .
-    command: python -m unittest test_slack_reminder.py
+    command: python -m unittest discover -s . -p "test_*.py" -v
     environment:
       - ENV=test
       - PERSONAL_GITHUB_TOKEN=dummy_token
       - SLACK_BOT_TOKEN=dummy_token
       - SLACK_CHANNEL_ID=dummy_channel
-      - REPO=tomitahisaki/blog_slack_reminder
