@@ -12,4 +12,3 @@ services:
       - PERSONAL_GITHUB_TOKEN=dummy_token
       - SLACK_BOT_TOKEN=dummy_token
       - SLACK_CHANNEL_ID=dummy_channel
-      - REPO=tomitahisaki/blog_slack_reminder
