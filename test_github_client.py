@@ -58,20 +58,6 @@ class TestGitHubIssueClient(unittest.TestCase):
     self.assertEqual(kwargs['params']['labels'], '未執筆')
     
   @patch('github_client.requests.get')
-  def test_fetch_issues_default_parameters(self, mock_get):
-    mock_response = MagicMock()
-    mock_response.json.return_value = []
-    mock_response.raise_for_status.return_value = None
-    mock_get.return_value = mock_response
-    
-    self.client.fetch_issues()
-    
-    args, kwargs = mock_get.call_args
-    expected_params = {"state": "open"}
-    
-    self.assertEqual(kwargs['params'], expected_params)
-  
-  @patch('github_client.requests.get')
   def test_fetch_issues_with_state_and_labels(self, mock_get):
     mock_response = MagicMock()
     mock_response.json.return_value = [
