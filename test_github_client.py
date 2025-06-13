@@ -19,8 +19,8 @@ class TestGitHubIssueClient(unittest.TestCase):
         "body": "Pythonの基礎について書く",
         "state": "open",
         "labels": [
-            {"name": "未執筆"},
-            {"name": "Python"}
+          {"name": "未執筆"},
+          {"name": "Python"}
         ]
       },
       {
@@ -29,8 +29,8 @@ class TestGitHubIssueClient(unittest.TestCase):
         "body": "JavaScriptの入門記事",
         "state": "open",
         "labels": [
-            {"name": "未執筆"},
-            {"name": "JavaScript"}
+          {"name": "未執筆"},
+          {"name": "JavaScript"}
         ]
       }
     ]
@@ -56,7 +56,7 @@ class TestGitHubIssueClient(unittest.TestCase):
     args, kwargs = mock_get.call_args
     self.assertEqual(kwargs['params']['state'], 'open')
     self.assertEqual(kwargs['params']['labels'], '未執筆')
-  
+    
   @patch('github_client.requests.get')
   def test_fetch_issues_default_parameters(self, mock_get):
     mock_response = MagicMock()
@@ -193,4 +193,4 @@ class TestGitHubIssueClient(unittest.TestCase):
     self.assertEqual(result[0]["labels"], [])  # 空のラベル配列
 
 if __name__ == '__main__':
-    unittest.main()
+  unittest.main()
