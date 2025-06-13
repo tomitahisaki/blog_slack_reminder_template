@@ -190,7 +190,7 @@ class TestGitHubIssueClient(unittest.TestCase):
     mock_response.json.return_value = [
       {
         "title": "最近の記事",
-        "html_url": "https//github.com/test/repo/issues/6",
+        "html_url": "https://github.com/test/repo/issues/6",
         "body": "最近の更新内容",
         "state": "open",
         "labels": [{"name": "更新"}],
@@ -204,7 +204,7 @@ class TestGitHubIssueClient(unittest.TestCase):
 
     self.assertEqual(len(result), 1)
     self.assertEqual(result[0]["title"], "最近の記事")
-    self.assertEqual(result[0]["html_url"], "https//github.com/test/repo/issues/6")
+    self.assertEqual(result[0]["html_url"], "https://github.com/test/repo/issues/6")
     self.assertEqual(result[0]["body"], "最近の更新内容")
     self.assertEqual(result[0]["state"], "open")
     self.assertEqual(len(result[0]["labels"]), 1)
