@@ -1,5 +1,10 @@
 from slack_sdk import WebClient
 
+NO_ISSUES_MESSAGE = "✅️ 今週は未執筆のブログ記事がありません"
+BLOG_CANDIDATES_HEADER = "📝 *今週のはてなブログ候補*\n\n"
+WEEKLY_STATS_HEADER = "📊 *今週の執筆統計*\n\n"
+NO_ARTICLES_MESSAGE = "✅ 今週執筆した記事はありません"
+ARTICLES_COUNT_MESSAGE = "🎉 今週は{count}記事を執筆しました！\n\n"
 class SlackNotifier:
   def __init__(self, slack_token, channel_id):
     self.client = WebClient(token=slack_token)
@@ -12,21 +17,19 @@ class SlackNotifier:
     )
   
   def post_no_issues_message(self):
-    message = "✅️ 今週は未執筆のブログ記事がありません"
-    self.post_message(message)
+    self.post_message(NO_ARTICLES_MESSAGE)
   
   def post_issues_summary(self, formatted_issues):
-    header = "📝 *今週のはてなブログ候補*\n\n"
     issue_list = "\n".join(formatted_issues)
-    message = f"{header}{issue_list}"
+    message = f"{BLOG_CANDIDATES_HEADER}{issue_list}"
     self.post_message(message)
   
   def post_completed_articles_summary(self, formatted_issues):
     if not formatted_issues:
-      message = "📊 *今週の執筆統計*\n\n✅ 今週執筆した記事はありません"
+      message = f"{WEEKLY_STATS_HEADER}{NO_ARTICLES_MESSAGE}"
     else:
       count = len(formatted_issues)
-      header = f"📊 *今週の執筆統計*\n\n🎉 今週は{count}記事を執筆しました！\n\n"
+      header = f"{WEEKLY_STATS_HEADER}{ARTICLES_COUNT_MESSAGE.format(count=count)}"
       issue_list = "\n".join(formatted_issues)
       message = f"{header}{issue_list}"
     
