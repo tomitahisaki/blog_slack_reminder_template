@@ -28,11 +28,7 @@ def main():
     formatted_issues = [format_issues(issue) for issue in issues]
 
     notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
-    
-    if not issues:
-        notifier.post_no_issues_message()
-    else:
-        notifier.post_issues_summary(formatted_issues)
+    notifier.post_blog_candidates(formatted_issues)
 
 if __name__ == "__main__":
   main()

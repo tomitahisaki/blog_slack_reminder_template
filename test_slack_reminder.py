@@ -74,7 +74,7 @@ class TestSlackReminder(unittest.TestCase):
         
         mock_fetch.assert_called_once()
         mock_notifier.assert_called_once()
-        mock_notifier_instance.post_issues_summary.assert_called_once()
+        mock_notifier_instance.post_blog_candidates.assert_called_once()
     
     @patch('slack_reminder.SlackNotifier')
     @patch('slack_reminder.fetch_issues')
@@ -87,7 +87,7 @@ class TestSlackReminder(unittest.TestCase):
         
         mock_fetch.assert_called_once()
         mock_notifier.assert_called_once()
-        mock_notifier_instance.post_no_issues_message.assert_called_once()
+        mock_notifier_instance.post_blog_candidates.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()

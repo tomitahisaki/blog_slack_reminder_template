@@ -15,15 +15,16 @@ class SlackNotifier:
       channel=self.channel_id,
       text=message
     )
-  
-  def post_no_issues_message(self):
-    self.post_message(NO_ARTICLES_MESSAGE)
-  
-  def post_issues_summary(self, formatted_issues):
-    issue_list = "\n".join(formatted_issues)
-    message = f"{BLOG_CANDIDATES_HEADER}{issue_list}"
+
+  def post_blog_candidates(self, formatted_issues):
+    if not formatted_issues:
+      message = f"{BLOG_CANDIDATES_HEADER}{NO_ISSUES_MESSAGE}"
+    else:
+      issue_list = "\n".join(formatted_issues)
+      message = f"{BLOG_CANDIDATES_HEADER}{issue_list}"
+    
     self.post_message(message)
-  
+
   def post_completed_articles_summary(self, formatted_issues):
     if not formatted_issues:
       message = f"{WEEKLY_STATS_HEADER}{NO_ARTICLES_MESSAGE}"
