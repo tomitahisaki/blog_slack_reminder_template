@@ -1,17 +1,17 @@
-name: Weekly Slack Reminder
+name: Weekly Writing Stats
 
 on:
   schedule:
-    - cron: "0 21 * * 5" # 毎週土曜 6:00 JST
-  workflow_dispatch: # 手動実行も可能
+    - cron: "0 9 * * 0" # 毎週日曜 18:00 JST
+  workflow_dispatch::
 
 jobs:
-  notify:
+  notify-stats:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -19,12 +19,14 @@ jobs:
           python-version: 3.11
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run Slack reminder script
+      - name: Send weekly writing stats
         env:
           PERSONAL_GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
           REPO: ${{ secrets.REPO }}
-        run: python slack_reminder.py
+        run: python weekly_stats.py
