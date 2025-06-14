@@ -1,34 +1,14 @@
-import os
-from github_client import GitHubIssueClient
-from issue_formatter import IssueFormatter
-from slack_notifier import SlackNotifier
+from base_notification_service import BaseNotificationService
 
-if os.getenv("ENV", "local") == "local":
-  try:
-    from dotenv import load_dotenv
-    load_dotenv()
-  except ImportError:
-    print("please install python-dotenv to load environment variables from .env file")
-
-GITHUB_TOKEN = os.getenv("PERSONAL_GITHUB_TOKEN")
-SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-SLACK_CHANNEL = os.getenv("SLACK_CHANNEL_ID")
-REPO = os.getenv("REPO")
-
-def fetch_issues():
-  github_client = GitHubIssueClient(GITHUB_TOKEN, REPO)
-  return github_client.fetch_issues(state="open", labels="未執筆")
-
-def format_issues(issue):
-  formatter = IssueFormatter()
-  return formatter.format_issue_summary(issue)
+class BlogCandidatesService(BaseNotificationService):
+    def run(self):
+        issues = self.fetch_issues(state="open", labels="未執筆")
+        formatted_issues = self.format_issues(issues)
+        self.send_notification(formatted_issues, "blog_candidates")
 
 def main():
-    issues = fetch_issues()
-    formatted_issues = [format_issues(issue) for issue in issues]
-
-    notifier = SlackNotifier(SLACK_TOKEN, SLACK_CHANNEL)
-    notifier.post_blog_candidates(formatted_issues)
+    service = BlogCandidatesService()
+    service.run()
 
 if __name__ == "__main__":
-  main()
+    main()
