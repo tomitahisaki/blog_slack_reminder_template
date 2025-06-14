@@ -83,5 +83,42 @@ class TestSlackNotifier(unittest.TestCase):
       text=expected_message
     )
 
+  @patch('slack_notifier.WebClient')
+  def test_post_completed_articles_summary(self, mock_webclient):
+    mock_client_instance = MagicMock()
+    mock_webclient.return_value = mock_client_instance
+    
+    notifier = SlackNotifier(self.slack_token, self.channel_id)
+    
+    formatted_issues = [
+      "📌<https://github.com/test/url1|記事1>\n",
+      "📌<https://github.com/test/url2|記事2>\n"
+    ]
+
+    notifier.post_completed_articles_summary(formatted_issues)
+
+    expected_message = "📊 *今週の執筆統計*\n\n🎉 今週は2記事を執筆しました！\n\n📌<https://github.com/test/url1|記事1>\n\n📌<https://github.com/test/url2|記事2>\n"
+
+    mock_client_instance.chat_postMessage.assert_called_once_with(
+      channel=self.channel_id,
+      text=expected_message
+    )
+  @patch('slack_notifier.WebClient')
+  def test_post_completed_articles_summary_no_issues(self, mock_webclient):
+    mock_client_instance = MagicMock()
+    mock_webclient.return_value = mock_client_instance
+    
+    notifier = SlackNotifier(self.slack_token, self.channel_id)
+    
+    formatted_issues = []
+    
+    notifier.post_completed_articles_summary(formatted_issues)
+    
+    expected_message = "📊 *今週の執筆統計*\n\n✅ 今週執筆した記事はありません"
+    mock_client_instance.chat_postMessage.assert_called_once_with(
+      channel=self.channel_id,
+      text=expected_message
+    )
+
 if __name__ == '__main__':
-    unittest.main()
+  unittest.main()

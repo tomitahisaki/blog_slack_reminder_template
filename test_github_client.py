@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from github_client import GitHubIssueClient
+from datetime import datetime, timedelta
 
 class TestGitHubIssueClient(unittest.TestCase):
 
@@ -177,6 +178,39 @@ class TestGitHubIssueClient(unittest.TestCase):
     self.assertEqual(result[0]["body"], "ラベルが付与されていない記事")
     self.assertEqual(result[0]["state"], "open")
     self.assertEqual(result[0]["labels"], [])  # 空のラベル配列
+  
+  @patch('github_client.requests.get')
+  def test_fetch_issues_with_since_parameter(self, mock_get):
+    now = datetime.now()
+    recent_date = now - timedelta(days=3)
+    old_date = now - timedelta(days=20)
+    one_week_ago = now - timedelta(days=7)
+
+    mock_response = MagicMock()
+    mock_response.json.return_value = [
+      {
+        "title": "最近の記事",
+        "html_url": "https://github.com/test/repo/issues/6",
+        "body": "最近の更新内容",
+        "state": "open",
+        "labels": [{"name": "更新"}],
+        "created_at": recent_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+      },
+    ]
+    mock_response.raise_for_status.return_value = None
+    mock_get.return_value = mock_response
+
+    result = self.client.fetch_issues(since=one_week_ago)
+
+    self.assertEqual(len(result), 1)
+    self.assertEqual(result[0]["title"], "最近の記事")
+    self.assertEqual(result[0]["html_url"], "https://github.com/test/repo/issues/6")
+    self.assertEqual(result[0]["body"], "最近の更新内容")
+    self.assertEqual(result[0]["state"], "open")
+    self.assertEqual(len(result[0]["labels"]), 1)
+
+    args, kwargs = mock_get.call_args
+    self.assertEqual(kwargs['params']['since'], one_week_ago.strftime("%Y-%m-%dT%H:%M:%SZ"))
 
 if __name__ == '__main__':
   unittest.main()
