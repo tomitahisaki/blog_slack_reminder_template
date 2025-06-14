@@ -32,22 +32,7 @@ class TestSlackNotifier(unittest.TestCase):
     )
   
   @patch('slack_notifier.WebClient')
-  def test_post_no_issues_message(self, mock_webclient):
-    mock_client_instance = MagicMock()
-    mock_webclient.return_value = mock_client_instance
-    
-    notifier = SlackNotifier(self.slack_token, self.channel_id)
-    
-    notifier.post_no_issues_message()
-    
-    expected_message = "✅️ 今週は未執筆のブログ記事がありません"
-    mock_client_instance.chat_postMessage.assert_called_once_with(
-      channel=self.channel_id,
-      text=expected_message
-    )
-  
-  @patch('slack_notifier.WebClient')
-  def test_post_issues_summary(self, mock_webclient):
+  def test_post_blog_candidates_with_issues(self, mock_webclient):
     mock_client_instance = MagicMock()
     mock_webclient.return_value = mock_client_instance
     
@@ -58,7 +43,7 @@ class TestSlackNotifier(unittest.TestCase):
       "📌<https://github.com/test/url2|記事2>\n"
     ]
     
-    notifier.post_issues_summary(formatted_issues)
+    notifier.post_blog_candidates(formatted_issues)
     
     expected_message = "📝 *今週のはてなブログ候補*\n\n📌<https://github.com/test/url1|記事1>\n\n📌<https://github.com/test/url2|記事2>\n"
     mock_client_instance.chat_postMessage.assert_called_once_with(
@@ -67,7 +52,7 @@ class TestSlackNotifier(unittest.TestCase):
     )
   
   @patch('slack_notifier.WebClient')
-  def test_post_issues_summary_empty_list(self, mock_webclient):
+  def test_post_blog_candidates_no_issues(self, mock_webclient):
     mock_client_instance = MagicMock()
     mock_webclient.return_value = mock_client_instance
     
@@ -75,9 +60,9 @@ class TestSlackNotifier(unittest.TestCase):
     
     formatted_issues = []
     
-    notifier.post_issues_summary(formatted_issues)
+    notifier.post_blog_candidates(formatted_issues)
     
-    expected_message = "📝 *今週のはてなブログ候補*\n\n"
+    expected_message = "📝 *今週のはてなブログ候補*\n\n✅️ 今週は未執筆のブログ記事がありません"
     mock_client_instance.chat_postMessage.assert_called_once_with(
       channel=self.channel_id,
       text=expected_message
