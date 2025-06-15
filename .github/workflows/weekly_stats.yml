@@ -3,7 +3,7 @@ name: Weekly Writing Stats
 on:
   schedule:
     # - cron: "0 9 * * 0" # 毎週日曜 18:00 JST
-  workflow_dispatch::
+  workflow_dispatch:
 
 jobs:
   notify-stats:
